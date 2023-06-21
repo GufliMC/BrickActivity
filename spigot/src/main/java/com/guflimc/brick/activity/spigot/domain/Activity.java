@@ -1,6 +1,7 @@
 package com.guflimc.brick.activity.spigot.domain;
 
 import com.guflimc.brick.activity.spigot.events.ActivityFinishEvent;
+import com.guflimc.brick.activity.spigot.extension.actions.Action;
 import com.guflimc.brick.activity.spigot.timer.Timeable;
 import com.guflimc.brick.activity.spigot.timer.Timer;
 import com.guflimc.brick.regions.api.domain.Region;
@@ -138,7 +139,7 @@ public final class Activity {
     //
 
     public <T extends Event> EventSubscription.Builder<T> on(@NotNull Class<T> eventClass) {
-        return new ActivityEventSubscriptionBuilder<>(this, eventClass);
+        return new ActivityEventSubscription.Builder<>(this, eventClass);
     }
 
     public void on(@NotNull Listener listener) {
@@ -172,6 +173,19 @@ public final class Activity {
         }
     }
 
+    public <T extends Event> EventSubscription.Builder<T> on(@NotNull Class<T> eventClass, @NotNull Action... actions) {
+        return new ActivityEventSubscription.Builder<>(this, eventClass)
+                .handler((e) -> {
+
+                });
+    }
+
+    public class ActionSource<T extends Event> {
+
+        private final Activity activity;
+        private final T event;
+
+    }
 
     //
 

@@ -1,0 +1,12 @@
+actions:
+  kill:
+    condition: $source.entity is player && $source.entity.killer is player
+    operations:
+      - "execute say $source.entity.name was killed by $source.entity.killer.name."
+      - "drop $source.entity.location $source.entity.inventory"
+
+events:
+  entity_death:
+    actions:
+      - kill
+
