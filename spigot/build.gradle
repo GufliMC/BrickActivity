@@ -10,16 +10,12 @@ repositories {
 }
 
 dependencies {
+    api project(':common')
+
+    api 'com.guflimc.brick.math:spigot:+'
+
     // provided by platform
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
 
-    // provided by plugins
-    compileOnly 'com.guflimc.brick.regions:spigot-api:+'
-    compileOnly 'com.guflimc.brick.math:spigot:+'
-
-    // shadow
-    api 'net.kyori:adventure-api:4.+'
-
-//    implementation 'com.guflimc.colonel:annotation:+'
     implementation "net.kyori:adventure-text-serializer-legacy:4.+"
 }

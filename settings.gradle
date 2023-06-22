@@ -1,3 +1,5 @@
-rootProject.name = 'BrickActivity'
+rootProject.name = 'BrickArena'
 
+include 'common'
 include 'spigot'
+
