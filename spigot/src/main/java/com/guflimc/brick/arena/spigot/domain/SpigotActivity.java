@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public final class SpigotActivity extends Activity<Player> {
+public class SpigotActivity extends Activity<Player> {
 
     public final JavaPlugin plugin;
     final Collection<EventSubscription> subscriptions = new CopyOnWriteArraySet<>();

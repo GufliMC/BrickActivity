@@ -6,14 +6,11 @@ plugins {
 group 'com.guflimc.brick.arena'
 version = scmVersion.version
 
-def javadocProjects = [project(':spigot')]
+def javadocProjects = [project(':common'), project(':spigot')]
 ext.set("javadocProjects", javadocProjects)
 
-def publishProjects = [project(':spigot')]
+def publishProjects = [project(':common'), project(':spigot')]
 ext.set("publishProjects", publishProjects)
-
-def shadowProjects = [project(':spigot')]
-ext.set("shadowProjects", shadowProjects)
 
 subprojects {
     apply plugin: 'java'
@@ -27,9 +24,3 @@ subprojects {
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-default.gradle'
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-javadoc.gradle'
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-publish.gradle'
-apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-shadow.gradle'
-
-if ( System.getProperty("os.name").toLowerCase().contains("windows") ) {
-    ext.set("shadowCopy", [(project(':spigot')): 'D:/System/Documents/testservers/1.19/plugins'])
-    apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-shadow-copy.gradle'
-}
