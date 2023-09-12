@@ -13,6 +13,7 @@ dependencies {
     api project(':common')
 
     api 'com.guflimc.brick.math:spigot:+'
+    api 'com.guflimc.brick.scheduler:spigot-api:+'
 
     // provided by platform
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'

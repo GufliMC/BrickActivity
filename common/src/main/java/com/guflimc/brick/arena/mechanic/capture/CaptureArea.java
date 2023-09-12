@@ -1,4 +1,4 @@
-package com.guflimc.brick.arena.system.capture;
+package com.guflimc.brick.arena.mechanic.capture;
 
 import com.guflimc.brick.arena.system.teams.Team;
 import com.guflimc.brick.arena.system.teams.TeamActivity;

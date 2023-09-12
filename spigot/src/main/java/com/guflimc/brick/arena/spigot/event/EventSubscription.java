@@ -1,4 +1,4 @@
-package com.guflimc.brick.arena.spigot.subscription;
+package com.guflimc.brick.arena.spigot.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -22,31 +22,27 @@ import java.util.function.Predicate;
 
 public class EventSubscription<T extends Event> implements Listener, EventExecutor {
 
-    private final Consumer<EventSubscription<T>> unsubscribe;
+    private final EventFilter filter;
 
     private final Class<T> eventClass;
     private final BiConsumer<T, EventSubscription<T>> handler;
     private final Collection<Predicate<T>> until;
     private final Collection<Predicate<T>> conditions;
-    private final Collection<Predicate<Event>> filters;
 
-    private EventSubscription(@NotNull Consumer<EventSubscription<T>> unsubscribe,
+    private EventSubscription(@NotNull EventFilter filter,
                               @NotNull Class<T> eventClass,
                               @NotNull BiConsumer<T, EventSubscription<T>> handler,
                               @NotNull Collection<Predicate<T>> until,
-                              @NotNull Collection<Predicate<T>> conditions,
-                              @NotNull Collection<Predicate<Event>> filters) {
-        this.unsubscribe = unsubscribe;
+                              @NotNull Collection<Predicate<T>> conditions) {
+        this.filter = filter;
 
         this.eventClass = eventClass;
         this.handler = handler;
         this.until = Set.copyOf(until);
         this.conditions = Set.copyOf(conditions);
-        this.filters = filters;
     }
 
     public void unsubscribe() {
-        unsubscribe.accept(this);
         try {
             // unfortunately we can't cache this reflect call, as the method is static
             Method getHandlerListMethod = eventClass.getMethod("getHandlerList");
@@ -63,7 +59,7 @@ public class EventSubscription<T extends Event> implements Listener, EventExecut
             return;
         }
 
-        if (!filters.stream().allMatch((f) -> f.test(e))) {
+        if ( !filter.test(e) ) {
             return;
         }
 
@@ -86,20 +82,18 @@ public class EventSubscription<T extends Event> implements Listener, EventExecut
     public static class Builder<T extends Event> {
 
         private final JavaPlugin plugin;
-        private final Consumer<EventSubscription<T>> unsubscribe;
+        private final EventFilter filter;
 
         private final Class<T> eventClass;
         private BiConsumer<T, EventSubscription<T>> handler;
         private final Collection<Predicate<T>> until = new CopyOnWriteArraySet<>();
         private final Collection<Predicate<T>> conditions = new CopyOnWriteArraySet<>();
-        private final Collection<Predicate<Event>> filters;
         private EventPriority priority = EventPriority.NORMAL;
 
-        public Builder(@NotNull JavaPlugin plugin, @NotNull Consumer<EventSubscription<T>> unsubscribe, @NotNull Class<T> eventClass, @NotNull Collection<Predicate<Event>> filters) {
+        public Builder(@NotNull JavaPlugin plugin, @NotNull EventFilter filter, @NotNull Class<T> eventClass) {
             this.plugin = plugin;
-            this.unsubscribe = unsubscribe;
+            this.filter = filter;
             this.eventClass = eventClass;
-            this.filters = filters;
         }
 
         public EventSubscription.Builder<T> handler(@NotNull BiConsumer<T, EventSubscription<T>> handler) {
@@ -144,7 +138,7 @@ public class EventSubscription<T extends Event> implements Listener, EventExecut
             if (handler == null) {
                 throw new IllegalStateException("Handler not set");
             }
-            EventSubscription<T> sub = new EventSubscription<>(unsubscribe, eventClass, handler, until, conditions, filters);
+            EventSubscription<T> sub = new EventSubscription<>(filter, eventClass, handler, until, conditions);
             plugin.getServer().getPluginManager().registerEvent(eventClass, sub, priority, sub, plugin);
             return sub;
         }
